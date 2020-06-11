@@ -1,0 +1,12 @@
+# To learn more about .editorconfig see https://aka.ms/editorconfigdocs
+root = true
+
+# All files
+[*]
+indent_style = space
+
+# Xml files
+[*.xml]
+indent_size = 2
+
+file_header_template = Copyright (c) Tim Kennedy. All Rights Reserved. Licensed under the MIT License.

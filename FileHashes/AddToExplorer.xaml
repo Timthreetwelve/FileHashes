@@ -1,0 +1,54 @@
+﻿<Window x:Class="FileHashes.AddToExplorer"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:FileHashes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="File Explorer Integration"
+    Width="380"
+    Height="200"
+    FontSize="14"
+    SizeToContent="Height"
+    WindowStartupLocation="CenterOwner">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition />
+            <ColumnDefinition Width="10" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10" />
+            <RowDefinition Height="50" />
+            <RowDefinition Height="50" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="10" />
+        </Grid.RowDefinitions>
+        <TextBlock
+            Grid.Row="1"
+            Grid.Column="1"
+            Text="File Hashes can be to the context menu in File Explorer when right-clicking on a file."
+            TextWrapping="Wrap" />
+        <StackPanel
+            Grid.Row="2"
+            Grid.Column="1"
+            Orientation="Horizontal">
+            <Button x:Name="btnAddToExplorer"
+                Width="150"
+                Height="30"
+                Margin="10"
+                Click="BtnAddToExplorer_Click"
+                Content="Add to Explorer" />
+            <Button x:Name="btnRemoveExplorer"
+                Width="150"
+                Height="30"
+                Margin="10"
+                Click="BtnRemoveExplorer_Click"
+                Content="Remove from Explorer" />
+        </StackPanel>
+        <TextBlock x:Name="lblStatus"
+            Grid.Row="3"
+            Grid.Column="1"
+            TextWrapping="Wrap" />
+    </Grid>
+</Window>
