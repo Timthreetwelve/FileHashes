@@ -14,7 +14,8 @@
     Closing="Window_Closing"
     ContentRendered="Window_ContentRendered"
     FontSize="14"
-    SizeToContent="Height">
+    SizeToContent="Height"
+    SourceInitialized="Window_SourceInitialized">
     <Grid Background="GhostWhite">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="75" />
@@ -54,6 +55,7 @@
                 <MenuItem Click="BtnCalc_Click" Header="Calculate" />
                 <MenuItem Header="Help">
                     <MenuItem Click="BtnAbout_Click" Header="About" />
+                    <MenuItem Click="MnuReadMe_Click" Header="View ReadMe File" />
                 </MenuItem>
             </Menu>
         </DockPanel>
@@ -187,25 +189,25 @@
             Grid.Column="1"
             HorizontalAlignment="Left"
             VerticalAlignment="Center"
-            IsChecked="{Binding CheckMD5, Source={x:Static prop:Settings.Default}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            IsChecked="{Binding CheckMD5, Source={x:Static prop:Settings.Default}}" />
         <CheckBox x:Name="cbxSHA1"
             Grid.Row="4"
             Grid.Column="1"
             HorizontalAlignment="Left"
             VerticalAlignment="Center"
-            IsChecked="{Binding CheckSHA1, Source={x:Static prop:Settings.Default}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            IsChecked="{Binding CheckSHA1, Source={x:Static prop:Settings.Default}}" />
         <CheckBox x:Name="cbxSHA256"
             Grid.Row="5"
             Grid.Column="1"
             HorizontalAlignment="Left"
             VerticalAlignment="Center"
-            IsChecked="{Binding CheckSHA256, Source={x:Static prop:Settings.Default}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            IsChecked="{Binding CheckSHA256, Source={x:Static prop:Settings.Default}}" />
         <CheckBox x:Name="cbxSHA512"
             Grid.Row="6"
             Grid.Column="1"
             HorizontalAlignment="Left"
             VerticalAlignment="Center"
-            IsChecked="{Binding CheckSHA512, Source={x:Static prop:Settings.Default}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            IsChecked="{Binding CheckSHA512, Source={x:Static prop:Settings.Default}}" />
     </Grid>
 
 </Window>

@@ -5,7 +5,11 @@ root = true
 [*]
 indent_style = space
 
-# Xml files
+
+# S125: Sections of code should not be commented out
+dotnet_diagnostic.S125.severity = silent
+
+# XML files
 [*.xml]
 indent_size = 2
 

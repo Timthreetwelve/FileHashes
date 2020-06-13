@@ -1,13 +1,16 @@
 ﻿// Copyright(c) Tim Kennedy. All Rights Reserved. Licensed under the MIT License.
 
+using FileHashes.Properties;
 using Microsoft.Win32;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Interop;
 
 namespace FileHashes
 {
@@ -20,7 +23,21 @@ namespace FileHashes
         private const int bufferSize = 16 * 1024 * 1024;
         private string fileName;
         private string result;
-        private readonly Properties.Settings PSettings = Properties.Settings.Default;
+        private readonly Settings settings = Settings.Default;
+        #endregion
+
+        #region Window button voodoo
+        // https://stackoverflow.com/questions/18707782/disable-maximize-button-of-wpf-window-keeping-resizing-feature-intact
+        [DllImport("user32.dll")]
+        private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+        [DllImport("user32.dll")]
+        private static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+
+        private const int GWL_STYLE = -16;
+        private const int WS_MAXIMIZEBOX = 0x10000;                        // maximize button
+        private const int WS_MINIMIZEBOX = 0x20000;                        // minimize button
+        private const int WS_BOTHBOXES = WS_MINIMIZEBOX + WS_MAXIMIZEBOX;  // Both
+        private IntPtr windowHandle;
         #endregion
 
         public MainWindow()
@@ -29,12 +46,8 @@ namespace FileHashes
 
             ReadSettings();
         }
-        private void Window_ContentRendered(object sender, EventArgs e)
-        {
-            CommandLineArgs();
-        }
 
-        #region Get filename passed as command line argument
+        #region Process command line argument
         private void CommandLineArgs()
         {
             string[] args = App.Args;
@@ -43,7 +56,6 @@ namespace FileHashes
             {
                 tbxFileName.Text = args[0].Trim();
                 CalculateHashes();
-                Debug.WriteLine("||| Processing command line");
             }
         }
         #endregion
@@ -62,17 +74,18 @@ namespace FileHashes
                 switch (size)
                 {
                     case long n when (n > 500 && n <= 3500):
-                        Debug.WriteLine($"{size} is above 100MB - less than 3500MB");
+                        Debug.WriteLine($"*** {size} is above 100MB - less than 3500MB");
                         MessageBoxResult x = MessageBox.Show($"The file is {info.Length / MB} megabytes," +
                                                              $"\nThis could take a while." +
                                                              $"\nDo you want to continue? ",
                                                              "Large File Warning",
                                                              MessageBoxButton.YesNo,
                                                              MessageBoxImage.Question);
-                        if (x == MessageBoxResult.No) return false;
+                        if (x == MessageBoxResult.No)
+                            return false;
                         return true;
                     case long n when (n > 3500):
-                        Debug.WriteLine($"{size}MB is above 3500 MB");
+                        Debug.WriteLine($"||| {size}MB is above 3500 MB");
                         MessageBox.Show($"The file is {info.Length / MB} megabytes," +
                                      $"\nFile is too large.",
                                      "Large File Warning",
@@ -80,7 +93,7 @@ namespace FileHashes
                                      MessageBoxImage.Warning);
                         return false;
                     default:
-                        Debug.WriteLine($"{size}MB is less than 500MB");
+                        Debug.WriteLine($"*** {size}MB is less than 500MB");
                         return true;
                 }
             }
@@ -99,7 +112,6 @@ namespace FileHashes
         {
             if (GetFileInfo())
             {
-                Debug.WriteLine("||| Calc hashes");
                 ClearTextBoxes();
 
                 if ((bool)cbxMD5.IsChecked)
@@ -123,29 +135,22 @@ namespace FileHashes
 
         private string MD5Checksum(string file)
         {
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
             using (BufferedStream stream = new BufferedStream(File.OpenRead(file), bufferSize))
             {
                 using (MD5 md5 = new MD5CryptoServiceProvider())
                 {
                     byte[] checksum = md5.ComputeHash(stream);
-                    Debug.WriteLine($"+++ Finished MD5 {sw.Elapsed} elapsed");
                     return BitConverter.ToString(checksum).Replace("-", string.Empty).ToLower();
                 }
             }
         }
         private string SHA1Checksum(string file)
         {
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
             using (BufferedStream stream = new BufferedStream(File.OpenRead(file), bufferSize))
             {
                 using (SHA1 sha1 = new SHA1CryptoServiceProvider())
                 {
                     byte[] checksum = sha1.ComputeHash(stream);
-                    sw.Stop();
-                    Debug.WriteLine($"+++ Finished SHA1 {sw.Elapsed} elapsed");
                     return BitConverter.ToString(checksum).Replace("-", string.Empty).ToLower();
                 }
             }
@@ -220,6 +225,32 @@ namespace FileHashes
         #endregion
 
         #region Events
+        private void Window_ContentRendered(object sender, EventArgs e)
+        {
+            CommandLineArgs();
+        }
+
+        private void Window_SourceInitialized(object sender, EventArgs e)
+        {
+            windowHandle = new WindowInteropHelper(this).Handle;
+            DisableMinMaxButtons();
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            settings.WindowLeft = Left;
+            settings.WindowTop = Top;
+            settings.WindowHeight = Height;
+            settings.WindowWidth = Width;
+
+            //settings.CheckMD5 = cbxMD5.IsChecked.Value;
+            //settings.CheckSHA1 = cbxSHA1.IsChecked.Value;
+            //settings.CheckSHA256 = cbxSHA256.IsChecked.Value;
+            //settings.CheckSHA512 = cbxSHA512.IsChecked.Value;
+
+            settings.Save();
+        }
+
         private void BtnFileOpen_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog dlgOpen = new OpenFileDialog
@@ -245,7 +276,6 @@ namespace FileHashes
         private void BtnCalc_Click(object sender, RoutedEventArgs e)
         {
             CalculateHashes();
-            Debug.WriteLine("||| button clicked");
         }
 
         private void TbxFileName_KeyUp(object sender, KeyEventArgs e)
@@ -255,13 +285,46 @@ namespace FileHashes
                 CalculateHashes();
             }
         }
+
+        private void Explorer_Click(object sender, RoutedEventArgs e)
+        {
+            AddToExplorer add = new AddToExplorer
+            {
+                Owner = this
+            };
+            add.ShowDialog();
+        }
+
         private void BtnExit_Click(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
         }
+
+        private void BtnAbout_Click(object sender, RoutedEventArgs e)
+        {
+            About about = new About
+            {
+                Owner = Application.Current.MainWindow,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner
+            };
+            _ = about.ShowDialog();
+        }
+
+        private void MnuReadMe_Click(object sender, RoutedEventArgs e)
+        {
+            TextFileViewer.ViewTextFile(@".\ReadMe.txt");
+        }
         #endregion
 
         #region Helper Methods
+        protected void DisableMinMaxButtons()
+        {
+            if (windowHandle == IntPtr.Zero)
+                //throw new InvalidOperationException("The window has not yet been completely initialized");
+                return;
+            SetWindowLong(windowHandle, GWL_STYLE, GetWindowLong(windowHandle, GWL_STYLE) & ~WS_BOTHBOXES);
+        }
+
         private void ClearTextBoxes()
         {
             tbxMD5.Text = string.Empty;
@@ -271,7 +334,7 @@ namespace FileHashes
             tbxVerify.Text = string.Empty;
             lblVerify.Text = string.Empty;
         }
-        #region Title version
+
         public string WindowTitleVersion()
         {
             // Get the assembly version
@@ -284,53 +347,39 @@ namespace FileHashes
 
             return string.Format($"{myExe} - {titleVer}");
         }
-        #endregion Title version
 
         #endregion
-
-        private void BtnAbout_Click(object sender, RoutedEventArgs e)
-        {
-            _ = MessageBox.Show("Yo");
-        }
-
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            PSettings.WindowLeft = Left;
-            PSettings.WindowTop = Top;
-            PSettings.WindowHeight = Height;
-            PSettings.WindowWidth = Width;
-            PSettings.Save();
-        }
 
         #region Read the Settings file
         private void ReadSettings()
         {
             // Settings upgrade if needed
-            if (PSettings.SettingsUpgradeRequired)
+            if (settings.SettingsUpgradeRequired)
             {
-                PSettings.Upgrade();
-                PSettings.SettingsUpgradeRequired = false;
-                PSettings.Save();
+                settings.Upgrade();
+                settings.SettingsUpgradeRequired = false;
+                settings.AppVersion = CleanUp.GetVersion();
+                settings.Save();
+                // CleanupPrevSettings must be called AFTER settings Upgrade and Save
+                CleanUp.CleanupPrevSettings();
                 Debug.WriteLine("*** SettingsUpgradeRequired");
             }
 
             // Window position
-            Top = PSettings.WindowTop;
-            Left = PSettings.WindowLeft;
-            Width = PSettings.WindowWidth;
-            Height = PSettings.WindowHeight;
+            Top = settings.WindowTop;
+            Left = settings.WindowLeft;
+            Width = settings.WindowWidth;
+            Height = settings.WindowHeight;
+            WindowState = WindowState.Normal;
+
+            //cbxMD5.IsChecked = settings.CheckMD5;
+            //cbxSHA1.IsChecked = settings.CheckSHA1;
+            //cbxSHA256.IsChecked = settings.CheckSHA256;
+            //cbxSHA512.IsChecked = settings.CheckSHA512;
 
             // Put version number in title bar
             Title = WindowTitleVersion();
         }
-
         #endregion
-
-        private void Explorer_Click(object sender, RoutedEventArgs e)
-        {
-            AddToExplorer add = new AddToExplorer();
-            add.Owner = this;
-            add.ShowDialog();
-        }
     }
 }

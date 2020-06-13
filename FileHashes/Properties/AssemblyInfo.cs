@@ -1,6 +1,4 @@
 ﻿using System.Reflection;
-using System.Resources;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows;
 
@@ -8,9 +6,9 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("FileHashes")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Get for MD5, SHA1, SHA256 or SHA512 file hashes")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("TimCo")]
+[assembly: AssemblyCompany("T_K")]
 [assembly: AssemblyProduct("FileHashes")]
 [assembly: AssemblyCopyright("Copyright ©  2020 Tim Kennedy")]
 [assembly: AssemblyTrademark("")]
@@ -51,5 +49,5 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.39.0")]
-[assembly: AssemblyFileVersion("1.0.39.0")]
+[assembly: AssemblyVersion("0.0.30.0233")]
+[assembly: AssemblyFileVersion("0.0.30.0233")]
