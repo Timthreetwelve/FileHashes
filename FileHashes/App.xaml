@@ -2,7 +2,16 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:FileHashes"
+    xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
     Startup="Application_Startup"
     StartupUri="MainWindow.xaml">
-    <Application.Resources />
+    <Application.Resources>
+        <!--  Styling for Xceed MessageBox -->
+        <Style TargetType="{x:Type xctk:MessageBox}">
+            <Setter Property="CaptionForeground" Value="White" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="WindowBorderThickness" Value="0" />
+            <Setter Property="ButtonRegionBackground" Value="GhostWhite" />
+        </Style>
+    </Application.Resources>
 </Application>

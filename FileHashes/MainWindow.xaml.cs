@@ -11,6 +11,7 @@ using System.Security.Cryptography;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
+using MessageBox = Xceed.Wpf.Toolkit.MessageBox;
 
 namespace FileHashes
 {
@@ -73,8 +74,8 @@ namespace FileHashes
                 long size = info.Length / MB;
                 switch (size)
                 {
-                    case long n when (n > 500 && n <= 3500):
-                        Debug.WriteLine($"*** {size} is above 100MB - less than 3500MB");
+                    case long n when (n > 500 && n <= 4000):
+                        Debug.WriteLine($"*** {size} is above 100MB - less than 4000MB");
                         MessageBoxResult x = MessageBox.Show($"The file is {info.Length / MB} megabytes," +
                                                              $"\nThis could take a while." +
                                                              $"\nDo you want to continue? ",
@@ -82,15 +83,19 @@ namespace FileHashes
                                                              MessageBoxButton.YesNo,
                                                              MessageBoxImage.Question);
                         if (x == MessageBoxResult.No)
+                        {
+                            ClearTextBoxes();
                             return false;
+                        }
                         return true;
-                    case long n when (n > 3500):
-                        Debug.WriteLine($"||| {size}MB is above 3500 MB");
+                    case long n when (n > 4000):
+                        Debug.WriteLine($"||| {size}MB is above 4000 MB");
                         MessageBox.Show($"The file is {info.Length / MB} megabytes," +
                                      $"\nFile is too large.",
                                      "Large File Warning",
                                      MessageBoxButton.OK,
                                      MessageBoxImage.Warning);
+                        ClearTextBoxes();
                         return false;
                     default:
                         Debug.WriteLine($"*** {size}MB is less than 500MB");
