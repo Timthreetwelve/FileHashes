@@ -48,9 +48,10 @@ Integrate with File Explorer
 ============================
 
 If you want to integrate File Hashes with File Explorer, select Integrate with File Explorer from the
-File menu. A window will pop up that allows you to either add a menu item to the context menu that
-appears when you right-click on a file. The Add to Explorer option adds a registry key at
-HKEY_CURRENT_USER\Software\Classes\*\shell\FileHashes. The Remove from Explorer option deletes this key.
+File menu. A window will pop up that allows you to either add or remove a menu item on the context
+menu that appears when you right-click on a file. The Add to Explorer option adds a registry key at
+HKEY_CURRENT_USER\Software\Classes\*\shell\FileHashes. The Remove from Explorer option deletes this
+key.
 
 
 Uninstalling
