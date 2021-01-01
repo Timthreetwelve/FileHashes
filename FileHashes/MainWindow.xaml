@@ -4,7 +4,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:FileHashes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:prop="clr-namespace:FileHashes.Properties"
     mc:Ignorable="d"
     Title="File Hashes"
     Width="700"
@@ -189,25 +188,24 @@
             Grid.Column="1"
             HorizontalAlignment="Left"
             VerticalAlignment="Center"
-            IsChecked="{Binding CheckMD5, Source={x:Static prop:Settings.Default}}" />
+            IsChecked="{Binding CheckMD5, Source={x:Static local:UserSettings.Setting}}" />
         <CheckBox x:Name="cbxSHA1"
             Grid.Row="4"
             Grid.Column="1"
             HorizontalAlignment="Left"
             VerticalAlignment="Center"
-            IsChecked="{Binding CheckSHA1, Source={x:Static prop:Settings.Default}}" />
+            IsChecked="{Binding CheckSHA1, Source={x:Static local:UserSettings.Setting}}" />
         <CheckBox x:Name="cbxSHA256"
             Grid.Row="5"
             Grid.Column="1"
             HorizontalAlignment="Left"
             VerticalAlignment="Center"
-            IsChecked="{Binding CheckSHA256, Source={x:Static prop:Settings.Default}}" />
+            IsChecked="{Binding CheckSHA256, Source={x:Static local:UserSettings.Setting}}" />
         <CheckBox x:Name="cbxSHA512"
             Grid.Row="6"
             Grid.Column="1"
             HorizontalAlignment="Left"
             VerticalAlignment="Center"
-            IsChecked="{Binding CheckSHA512, Source={x:Static prop:Settings.Default}}" />
+            IsChecked="{Binding CheckSHA512, Source={x:Static local:UserSettings.Setting}}" />
     </Grid>
-
 </Window>

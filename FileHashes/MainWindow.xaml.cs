@@ -1,6 +1,5 @@
 ﻿// Copyright(c) Tim Kennedy. All Rights Reserved. Licensed under the MIT License.
 
-using FileHashes.Properties;
 using Microsoft.Win32;
 using System;
 using System.Diagnostics;
@@ -24,7 +23,6 @@ namespace FileHashes
         private const int bufferSize = 16 * 1024 * 1024;
         private string fileName;
         private string result;
-        private readonly Settings settings = Settings.Default;
         #endregion
 
         #region Window button voodoo
@@ -43,6 +41,8 @@ namespace FileHashes
 
         public MainWindow()
         {
+            UserSettings.Init(UserSettings.AppFolder,UserSettings.DefaultFilename,true);
+
             InitializeComponent();
 
             ReadSettings();
@@ -243,24 +243,19 @@ namespace FileHashes
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            settings.WindowLeft = Left;
-            settings.WindowTop = Top;
-            settings.WindowHeight = Height;
-            settings.WindowWidth = Width;
+            UserSettings.Setting.WindowLeft = Left;
+            UserSettings.Setting.WindowTop = Top;
+            UserSettings.Setting.WindowHeight = Height;
+            UserSettings.Setting.WindowWidth = Width;
 
-            //settings.CheckMD5 = cbxMD5.IsChecked.Value;
-            //settings.CheckSHA1 = cbxSHA1.IsChecked.Value;
-            //settings.CheckSHA256 = cbxSHA256.IsChecked.Value;
-            //settings.CheckSHA512 = cbxSHA512.IsChecked.Value;
-
-            settings.Save();
+            UserSettings.SaveSettings();
         }
 
         private void BtnFileOpen_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog dlgOpen = new OpenFileDialog
             {
-                Title = "Enter Log File Name",
+                Title = "Enter File Name",
                 CheckFileExists = true,
                 CheckPathExists = true,
                 Filter = "All files (*.*)|*.*"
@@ -358,29 +353,12 @@ namespace FileHashes
         #region Read the Settings file
         private void ReadSettings()
         {
-            // Settings upgrade if needed
-            if (settings.SettingsUpgradeRequired)
-            {
-                settings.Upgrade();
-                settings.SettingsUpgradeRequired = false;
-                settings.AppVersion = CleanUp.GetVersion();
-                settings.Save();
-                // CleanupPrevSettings must be called AFTER settings Upgrade and Save
-                CleanUp.CleanupPrevSettings();
-                Debug.WriteLine("*** SettingsUpgradeRequired");
-            }
-
             // Window position
-            Top = settings.WindowTop;
-            Left = settings.WindowLeft;
-            Width = settings.WindowWidth;
-            Height = settings.WindowHeight;
+            Top = UserSettings.Setting.WindowTop;
+            Left = UserSettings.Setting.WindowLeft;
+            Width = UserSettings.Setting.WindowWidth;
+            Height = UserSettings.Setting.WindowHeight;
             WindowState = WindowState.Normal;
-
-            //cbxMD5.IsChecked = settings.CheckMD5;
-            //cbxSHA1.IsChecked = settings.CheckSHA1;
-            //cbxSHA256.IsChecked = settings.CheckSHA256;
-            //cbxSHA512.IsChecked = settings.CheckSHA512;
 
             // Put version number in title bar
             Title = WindowTitleVersion();
