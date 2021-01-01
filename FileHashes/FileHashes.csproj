@@ -85,6 +85,9 @@
     </Compile>
     <Compile Include="SettingsManager.cs" />
     <Compile Include="TextFileViewer.cs" />
+    <Compile Include="TKMessageBox.xaml.cs">
+      <DependentUpon>TKMessageBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserSettings.cs" />
     <Page Include="About.xaml">
       <SubType>Designer</SubType>
@@ -109,6 +112,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="TKMessageBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -135,14 +142,18 @@
     <Resource Include="Images\Hash.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Images\ArrowCircle.png" />
+    <Resource Include="Images\Check.png" />
+    <Resource Include="Images\Error.png" />
+    <Resource Include="Images\information.png" />
+    <Resource Include="Images\Question.png" />
+    <Resource Include="Images\RedX.png" />
+    <Resource Include="Images\Warning.png" />
     <Content Include="ReadMe.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Extended.Wpf.Toolkit">
-      <Version>3.8.1</Version>
-    </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>12.0.3</Version>
     </PackageReference>

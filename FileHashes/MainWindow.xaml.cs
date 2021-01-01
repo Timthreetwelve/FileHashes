@@ -10,7 +10,8 @@ using System.Security.Cryptography;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
-using MessageBox = Xceed.Wpf.Toolkit.MessageBox;
+using TKUtils;
+using MessageBoxImage = TKUtils.MessageBoxImage;
 
 namespace FileHashes
 {
@@ -66,7 +67,7 @@ namespace FileHashes
         {
             string fn = tbxFileName.Text.Trim();
             fileName = fn;
-            long MB = (1024 * 1024);
+            const long MB = (1024 * 1024);
             if (File.Exists(fn))
             {
                 FileInfo info = new FileInfo(fn);
@@ -74,11 +75,10 @@ namespace FileHashes
                 long size = info.Length / MB;
                 switch (size)
                 {
-                    case long n when (n > 500 && n <= 4000):
-                        Debug.WriteLine($"*** {size} is above 100MB - less than 4000MB");
-                        MessageBoxResult x = MessageBox.Show($"The file is {info.Length / MB} megabytes," +
-                                                             $"\nThis could take a while." +
-                                                             $"\nDo you want to continue? ",
+                    case long n when (n > 500 && n <= 5000):
+                        Debug.WriteLine($"*** {size} is above 100MB - less than 5000MB");
+                        MessageBoxResult x = TKMessageBox.Show($"The file is {info.Length / MB:N0} megabytes," +
+                                                             "\nThis could take a while.\nDo you want to continue? ",
                                                              "Large File Warning",
                                                              MessageBoxButton.YesNo,
                                                              MessageBoxImage.Question);
@@ -88,10 +88,9 @@ namespace FileHashes
                             return false;
                         }
                         return true;
-                    case long n when (n > 4000):
-                        Debug.WriteLine($"||| {size}MB is above 4000 MB");
-                        MessageBox.Show($"The file is {info.Length / MB} megabytes," +
-                                     $"\nFile is too large.",
+                    case long n when (n > 5000):
+                        Debug.WriteLine($"||| {size}MB is above 5000 MB");
+                        TKMessageBox.Show($"The file is {info.Length / MB:N0} megabytes\nFile is too large.",
                                      "Large File Warning",
                                      MessageBoxButton.OK,
                                      MessageBoxImage.Warning);
@@ -118,6 +117,7 @@ namespace FileHashes
             if (GetFileInfo())
             {
                 ClearTextBoxes();
+                Mouse.OverrideCursor = Cursors.Wait;
 
                 if ((bool)cbxMD5.IsChecked)
                 {
@@ -135,6 +135,8 @@ namespace FileHashes
                 {
                     tbxSHA512.Text = SHA512Checksum(fileName);
                 }
+
+                Mouse.OverrideCursor = null;
             }
         }
 
@@ -210,15 +212,15 @@ namespace FileHashes
                     break;
             }
 
-            if (result.ToLower() == "true")
+            if (string.Equals(result, "true", StringComparison.OrdinalIgnoreCase))
             {
                 lblVerify.Text = "File hashes match";
             }
-            else if (result.ToLower() == "false")
+            else if (string.Equals(result, "false", StringComparison.OrdinalIgnoreCase))
             {
                 lblVerify.Text = "File hashes do not match";
             }
-            else if (result.ToLower() == "wrong length")
+            else if (string.Equals(result, "wrong length", StringComparison.OrdinalIgnoreCase))
             {
                 lblVerify.Text = "Verification hash is wrong length for MD5, SHA1, SHA256 or SHA512";
             }
@@ -320,8 +322,10 @@ namespace FileHashes
         protected void DisableMinMaxButtons()
         {
             if (windowHandle == IntPtr.Zero)
-                //throw new InvalidOperationException("The window has not yet been completely initialized");
+            {
                 return;
+            }
+
             SetWindowLong(windowHandle, GWL_STYLE, GetWindowLong(windowHandle, GWL_STYLE) & ~WS_BOTHBOXES);
         }
 

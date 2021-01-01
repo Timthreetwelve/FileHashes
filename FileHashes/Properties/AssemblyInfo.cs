@@ -6,11 +6,11 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("FileHashes")]
-[assembly: AssemblyDescription("Get for MD5, SHA1, SHA256 or SHA512 file hashes")]
+[assembly: AssemblyDescription("Get MD5, SHA1, SHA256 or SHA512 file hashes")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("T_K")]
 [assembly: AssemblyProduct("FileHashes")]
-[assembly: AssemblyCopyright("Copyright ©  2020 Tim Kennedy")]
+[assembly: AssemblyCopyright("Copyright ©  2021 Tim Kennedy")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
