@@ -133,9 +133,6 @@
     <None Include=".editorconfig" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Hash.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -149,6 +146,16 @@
     <Resource Include="Images\Question.png" />
     <Resource Include="Images\RedX.png" />
     <Resource Include="Images\Warning.png" />
+    <Resource Include="Images\bug.png" />
+    <Resource Include="Images\document-text.png" />
+    <Resource Include="Images\door-open-out.png" />
+    <Resource Include="Images\magnifier--minus.png" />
+    <Resource Include="Images\magnifier--plus.png" />
+    <Resource Include="Images\magnifier.png" />
+    <Resource Include="Images\magnifier-zoom-actual-equal.png" />
+    <Resource Include="Images\information-button.png" />
+    <Resource Include="Images\mouse-select-right.png" />
+    <Resource Include="Images\binocular.png" />
     <Content Include="ReadMe.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

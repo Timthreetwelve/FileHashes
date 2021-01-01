@@ -1,7 +1,8 @@
 ﻿// Copyright(c) Tim Kennedy. All Rights Reserved. Licensed under the MIT License.
 
-using Microsoft.Win32;
+#region Using directives
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
@@ -10,8 +11,11 @@ using System.Security.Cryptography;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Media;
+using Microsoft.Win32;
 using TKUtils;
 using MessageBoxImage = TKUtils.MessageBoxImage;
+#endregion Using directives
 
 namespace FileHashes
 {
@@ -42,7 +46,7 @@ namespace FileHashes
 
         public MainWindow()
         {
-            UserSettings.Init(UserSettings.AppFolder,UserSettings.DefaultFilename,true);
+            UserSettings.Init(UserSettings.AppFolder, UserSettings.DefaultFilename, true);
 
             InitializeComponent();
 
@@ -60,7 +64,7 @@ namespace FileHashes
                 CalculateHashes();
             }
         }
-        #endregion
+        #endregion Process command line argument
 
         #region Get file info
         private bool GetFileInfo()
@@ -111,7 +115,6 @@ namespace FileHashes
         #endregion
 
         #region Compute Hashes
-
         private void CalculateHashes()
         {
             if (GetFileInfo())
@@ -162,7 +165,6 @@ namespace FileHashes
                 }
             }
         }
-
         private string SHA256Checksum(string file)
         {
             using (FileStream stream = File.OpenRead(file))
@@ -174,7 +176,6 @@ namespace FileHashes
                 }
             }
         }
-
         private string SHA512Checksum(string file)
         {
             using (FileStream stream = File.OpenRead(file))
@@ -186,7 +187,7 @@ namespace FileHashes
                 }
             }
         }
-        #endregion
+        #endregion Compute Hashes
 
         #region Compare Hashes
         private void CompareHashes()
@@ -229,9 +230,9 @@ namespace FileHashes
                 lblVerify.Text = "?";
             }
         }
-        #endregion
+        #endregion Compare Hashes
 
-        #region Events
+        #region Window Events
         private void Window_ContentRendered(object sender, EventArgs e)
         {
             CommandLineArgs();
@@ -252,7 +253,9 @@ namespace FileHashes
 
             UserSettings.SaveSettings();
         }
+        #endregion Window Events
 
+        #region Menu & Button Events
         private void BtnFileOpen_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog dlgOpen = new OpenFileDialog
@@ -270,12 +273,24 @@ namespace FileHashes
             }
         }
 
+        private void GridSmaller_Click(object sender, RoutedEventArgs e)
+        {
+            GridSmaller();
+        }
+        private void GridLarger_Click(object sender, RoutedEventArgs e)
+        {
+            GridLarger();
+        }
+        private void GridReset_Click(object sender, RoutedEventArgs e)
+        {
+            GridSizeReset();
+        }
         private void BtnVerify_Click(object sender, RoutedEventArgs e)
         {
             CompareHashes();
         }
 
-        private void BtnCalc_Click(object sender, RoutedEventArgs e)
+        private void MnuCalc_Click(object sender, RoutedEventArgs e)
         {
             CalculateHashes();
         }
@@ -316,7 +331,7 @@ namespace FileHashes
         {
             TextFileViewer.ViewTextFile(@".\ReadMe.txt");
         }
-        #endregion
+        #endregion Menu & Button Events
 
         #region Helper Methods
         protected void DisableMinMaxButtons()
@@ -352,7 +367,7 @@ namespace FileHashes
             return string.Format($"{myExe} - {titleVer}");
         }
 
-        #endregion
+        #endregion Helper Methods
 
         #region Read the Settings file
         private void ReadSettings()
@@ -364,9 +379,105 @@ namespace FileHashes
             Height = UserSettings.Setting.WindowHeight;
             WindowState = WindowState.Normal;
 
+            // Set data grid zoom level
+            double curZoom = UserSettings.Setting.GridZoom;
+            Grid1.LayoutTransform = new ScaleTransform(curZoom, curZoom);
+
             // Put version number in title bar
             Title = WindowTitleVersion();
+
+            // Settings change event
+            UserSettings.Setting.PropertyChanged += UserSettingChanged;
         }
-        #endregion
+        #endregion Read the Settings file
+
+        #region Setting change
+        private void UserSettingChanged(object sender, PropertyChangedEventArgs e)
+        {
+            PropertyInfo prop = sender.GetType().GetProperty(e.PropertyName);
+            var newValue = prop?.GetValue(sender, null);
+            switch (e.PropertyName)
+            {
+                case "KeepOnTop":
+                    Topmost = (bool)newValue;
+                    break;
+            }
+            Debug.WriteLine($"***Setting change: {e.PropertyName} New Value: {newValue}");
+        }
+        #endregion Setting change
+
+        #region Grid Size
+        private void GridSmaller()
+        {
+            double curZoom = UserSettings.Setting.GridZoom;
+            if (curZoom > 0.9)
+            {
+                curZoom -= .05;
+                UserSettings.Setting.GridZoom = Math.Round(curZoom, 2);
+            }
+            Grid1.LayoutTransform = new ScaleTransform(curZoom, curZoom);
+        }
+        private void GridLarger()
+        {
+            double curZoom = UserSettings.Setting.GridZoom;
+            if (curZoom < 1.3)
+            {
+                curZoom += .05;
+                UserSettings.Setting.GridZoom = Math.Round(curZoom, 2);
+            }
+            Grid1.LayoutTransform = new ScaleTransform(curZoom, curZoom);
+        }
+        private void GridSizeReset()
+        {
+            UserSettings.Setting.GridZoom = 1.0;
+            Grid1.LayoutTransform = new ScaleTransform(1, 1);
+        }
+        #endregion Grid Size
+
+        #region Mouse Events
+        private void Grid1_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (Keyboard.Modifiers != ModifierKeys.Control)
+                return;
+
+            if (e.Delta > 0)
+            {
+                GridLarger();
+            }
+            else if (e.Delta < 0)
+            {
+                GridSmaller();
+            }
+        }
+        #endregion Mouse Events
+
+        #region Keyboard Events
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.NumPad0 && (Keyboard.Modifiers & ModifierKeys.Control) != 0)
+            {
+                GridSizeReset();
+            }
+
+            if (e.Key == Key.Add && (Keyboard.Modifiers & ModifierKeys.Control) != 0)
+            {
+                GridLarger();
+            }
+
+            if (e.Key == Key.Subtract && (Keyboard.Modifiers & ModifierKeys.Control) != 0)
+            {
+                GridSmaller();
+            }
+            if (e.Key == Key.F1)
+            {
+                About about = new About
+                {
+                    Owner = Application.Current.MainWindow,
+                    WindowStartupLocation = WindowStartupLocation.CenterOwner
+                };
+                _ = about.ShowDialog();
+            }
+        }
+        #endregion Keyboard Events
     }
 }

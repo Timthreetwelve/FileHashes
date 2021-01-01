@@ -1,6 +1,10 @@
-﻿using System.ComponentModel;
+﻿// Copyright(c) Tim Kennedy. All Rights Reserved. Licensed under the MIT License.
+
+#region Using directives
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using TKUtils;
+#endregion Using directives
 
 namespace FileHashes
 {
@@ -14,6 +18,7 @@ namespace FileHashes
             CheckSHA1 = false;
             CheckSHA256 = true;
             CheckSHA512 = false;
+            GridZoom = 1;
             KeepOnTop = false;
             WindowLeft = 100;
             WindowTop = 100;
@@ -30,6 +35,23 @@ namespace FileHashes
         public bool CheckSHA256 { get; set; }
 
         public bool CheckSHA512 { get; set; }
+
+        public double GridZoom
+        {
+            get
+            {
+                if (gridZoom <= 0)
+                {
+                    gridZoom = 1;
+                }
+                return gridZoom;
+            }
+            set
+            {
+                gridZoom = value;
+                OnPropertyChanged();
+            }
+        }
 
         public bool KeepOnTop
         {
@@ -96,6 +118,7 @@ namespace FileHashes
 
         #region Private backing fields
         private bool keepOnTop;
+        private double gridZoom;
         private double windowHeight;
         private double windowLeft;
         private double windowTop;

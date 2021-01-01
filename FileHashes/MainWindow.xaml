@@ -1,10 +1,10 @@
-﻿<Window x:Class="FileHashes.MainWindow"
+﻿<Window
+    x:Class="FileHashes.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:FileHashes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
     Title="File Hashes"
     Width="700"
     Height="300"
@@ -12,10 +12,16 @@
     MinHeight="310"
     Closing="Window_Closing"
     ContentRendered="Window_ContentRendered"
+    KeyDown="Window_KeyDown"
     FontSize="14"
     SizeToContent="Height"
-    SourceInitialized="Window_SourceInitialized">
-    <Grid Background="GhostWhite">
+    SourceInitialized="Window_SourceInitialized"
+    Topmost="{Binding KeepOnTop, Source={x:Static local:UserSettings.Setting}}"
+    mc:Ignorable="d">
+    <Grid
+        x:Name="Grid1"
+        Background="GhostWhite"
+        PreviewMouseWheel="Grid1_PreviewMouseWheel">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="75" />
             <ColumnDefinition Width="20" />
@@ -41,24 +47,89 @@
             Grid.ColumnSpan="5"
             LastChildFill="True">
             <Menu
-                Padding="10,0,0,0"
+                Padding="7,5,0,0"
                 Background="GhostWhite"
                 BorderBrush="GhostWhite"
                 BorderThickness="0,0,0,.5"
                 DockPanel.Dock="Top"
                 FontSize="14">
                 <MenuItem Header="File">
-                    <MenuItem Click="Explorer_Click" Header="Integrate with File Explorer" />
-                    <MenuItem Click="BtnExit_Click" Header="Exit" />
+                    <MenuItem Click="BtnFileOpen_Click" Header="Browse for file">
+                        <MenuItem.Icon>
+                            <Image Source="Images/binocular.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <Separator />
+                    <MenuItem Click="BtnExit_Click" Header="Exit" InputGestureText="Alt+F4">
+                        <MenuItem.Icon>
+                            <Image Source="Images/door-open-out.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
                 </MenuItem>
-                <MenuItem Click="BtnCalc_Click" Header="Calculate" />
+                <MenuItem Click="MnuCalc_Click" Header="Calculate" />
+                <MenuItem Header="Options">
+                    <MenuItem Click="Explorer_Click" Header="Integrate with File Explorer" >
+                        <MenuItem.Icon>
+                            <Image Source="Images/mouse-select-right.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <Separator />
+                    <MenuItem Header="Zoom">
+                        <MenuItem
+                            Click="GridSmaller_Click"
+                            Header="_Smaller"
+                            InputGestureText="Ctrl+NumPad -"
+                            StaysOpenOnClick="True">
+                            <MenuItem.Icon>
+                                <Image Source="/Images/magnifier--minus.png" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem
+                            Click="GridLarger_Click"
+                            Header="_Larger"
+                            InputGestureText="Ctrl+NumPad +"
+                            StaysOpenOnClick="True">
+                            <MenuItem.Icon>
+                                <Image Source="/Images/magnifier--plus.png" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <Separator />
+                        <MenuItem
+                            Click="GridReset_Click"
+                            Header="_Reset"
+                            InputGestureText="Ctrl+NumPad 0"
+                            StaysOpenOnClick="True">
+                            <MenuItem.Icon>
+                                <Image Source="/Images/magnifier-zoom-actual-equal.png" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem.Icon>
+                            <Image Source="Images/magnifier.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <Separator />
+                    <MenuItem
+                        Header="Keep on Top"
+                        IsCheckable="True"
+                        IsChecked="{Binding KeepOnTop, Source={x:Static local:UserSettings.Setting}, Mode=TwoWay}" />
+
+                </MenuItem>
                 <MenuItem Header="Help">
-                    <MenuItem Click="BtnAbout_Click" Header="About" />
-                    <MenuItem Click="MnuReadMe_Click" Header="View ReadMe File" />
+                    <MenuItem Click="BtnAbout_Click" Header="About" InputGestureText="F1">
+                        <MenuItem.Icon>
+                            <Image Source="Images/information-button.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Click="MnuReadMe_Click" Header="View ReadMe File">
+                        <MenuItem.Icon>
+                            <Image Source="Images/document-text.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
                 </MenuItem>
             </Menu>
         </DockPanel>
-        <TextBox x:Name="tbxFileName"
+        <TextBox
+            x:Name="tbxFileName"
             Grid.Row="2"
             Grid.Column="2"
             Height="auto"
@@ -68,7 +139,8 @@
             VerticalContentAlignment="Center"
             KeyUp="TbxFileName_KeyUp"
             TextWrapping="Wrap" />
-        <TextBox x:Name="tbxMD5"
+        <TextBox
+            x:Name="tbxMD5"
             Grid.Row="3"
             Grid.Column="2"
             Height="auto"
@@ -78,7 +150,8 @@
             VerticalContentAlignment="Center"
             IsReadOnly="True"
             TextWrapping="Wrap" />
-        <TextBox x:Name="tbxSHA1"
+        <TextBox
+            x:Name="tbxSHA1"
             Grid.Row="4"
             Grid.Column="2"
             Height="auto"
@@ -88,7 +161,8 @@
             VerticalContentAlignment="Center"
             IsReadOnly="True"
             TextWrapping="Wrap" />
-        <TextBox x:Name="tbxSHA256"
+        <TextBox
+            x:Name="tbxSHA256"
             Grid.Row="5"
             Grid.Column="2"
             Height="auto"
@@ -98,7 +172,8 @@
             VerticalContentAlignment="Center"
             IsReadOnly="True"
             TextWrapping="Wrap" />
-        <TextBox x:Name="tbxSHA512"
+        <TextBox
+            x:Name="tbxSHA512"
             Grid.Row="6"
             Grid.Column="2"
             Height="auto"
@@ -109,7 +184,8 @@
             IsReadOnly="True"
             MaxLines="3"
             TextWrapping="Wrap" />
-        <TextBox x:Name="tbxVerify"
+        <TextBox
+            x:Name="tbxVerify"
             Grid.Row="7"
             Grid.Column="2"
             Height="auto"
@@ -119,7 +195,8 @@
             VerticalContentAlignment="Center"
             MaxLines="3"
             TextWrapping="Wrap" />
-        <TextBlock x:Name="lblVerify"
+        <TextBlock
+            x:Name="lblVerify"
             Grid.Row="8"
             Grid.Column="2"
             Height="25"
@@ -127,7 +204,8 @@
             Padding="5,0"
             VerticalAlignment="Top"
             FontWeight="Bold" />
-        <Button x:Name="btnFileOpen"
+        <Button
+            x:Name="btnFileOpen"
             Grid.Row="2"
             Grid.Column="0"
             Grid.ColumnSpan="2"
@@ -140,7 +218,8 @@
             BorderBrush="Gainsboro"
             Click="BtnFileOpen_Click"
             Content="File Name" />
-        <Button x:Name="btnVerify"
+        <Button
+            x:Name="btnVerify"
             Grid.Row="7"
             Grid.Column="0"
             Grid.ColumnSpan="2"
@@ -183,25 +262,29 @@
             Text="SHA512"
             TextWrapping="Wrap" />
 
-        <CheckBox x:Name="cbxMD5"
+        <CheckBox
+            x:Name="cbxMD5"
             Grid.Row="3"
             Grid.Column="1"
             HorizontalAlignment="Left"
             VerticalAlignment="Center"
             IsChecked="{Binding CheckMD5, Source={x:Static local:UserSettings.Setting}}" />
-        <CheckBox x:Name="cbxSHA1"
+        <CheckBox
+            x:Name="cbxSHA1"
             Grid.Row="4"
             Grid.Column="1"
             HorizontalAlignment="Left"
             VerticalAlignment="Center"
             IsChecked="{Binding CheckSHA1, Source={x:Static local:UserSettings.Setting}}" />
-        <CheckBox x:Name="cbxSHA256"
+        <CheckBox
+            x:Name="cbxSHA256"
             Grid.Row="5"
             Grid.Column="1"
             HorizontalAlignment="Left"
             VerticalAlignment="Center"
             IsChecked="{Binding CheckSHA256, Source={x:Static local:UserSettings.Setting}}" />
-        <CheckBox x:Name="cbxSHA512"
+        <CheckBox
+            x:Name="cbxSHA512"
             Grid.Row="6"
             Grid.Column="1"
             HorizontalAlignment="Left"

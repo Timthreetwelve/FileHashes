@@ -3,20 +3,18 @@
 
 Introduction
 ============
-
-FileHashes calculates file hashes (checksums) for a local file. This file hash can be used to
-determine if a file has changed.
+FileHashes calculates file hashes (checksums) for a file. This file hash can be used to determine
+if a file has changed.
 
 Many websites list file hashes for files available to download. The idea is to compare the file after
-it has been downloaded to the has listed on the website to see if the file is the same or if it has
-been corrupted.
+it has been downloaded to what is listed on the website to see if the file is the same or if it has
+possibly been altered or corrupted.
 
 FileHashes can calculate the MD5, SHA1, SHA256 and SHA512 hashes.
 
 
 How FileHashes Works
 ====================
-
 Enter a file name in the top text box either by typing or pasting the complete path, by clicking the
 File Name button and navigating to the desired file, or by right clicking the file and selecting
 File Hashes from the context menu. Note that the last option is only available after integrating
@@ -35,20 +33,18 @@ If there are multiple hash methods selected, the verify process will choose the 
 
 File Size Matters
 =================
-
 Calculating hashes takes time. For small files the elapsed time is imperceptible. Larger files will
 take more time. If the size of the file is greater that 500 megabytes, a message box will pop up
 asking for confirmation before proceeding. Note that the title bar may change to "Not Responding"
 before the calculation is completed. FileHashes will not attempt to calculate the file hash for
-any file over 4000 megabytes. This should allow a downloaded Windows 10 ISO to be checked. Select
+any file over 5000 megabytes. This should allow a downloaded Windows 10 ISO to be checked. Select
 only one hash method for large files.
 
 
 Integrate with File Explorer
 ============================
-
 If you want to integrate File Hashes with File Explorer, select Integrate with File Explorer from the
-File menu. A window will pop up that allows you to either add or remove a menu item on the context
+Options menu. A window will pop up that allows you to either add or remove a menu item on the context
 menu that appears when you right-click on a file. The Add to Explorer option adds a registry key at
 HKEY_CURRENT_USER\Software\Classes\*\shell\FileHashes. The Remove from Explorer option deletes this
 key.
@@ -56,21 +52,25 @@ key.
 
 Uninstalling
 ============
-
-To uninstall use the regular Windows add/remove programs feature.  If you are not planning to reinstall
-you may want to delete the files and folders in %localappdata%\T_K\FileHashes*.
+To uninstall use the regular Windows add/remove programs feature.
 
 
 Notices and License
 ===================
+FileHashes was written in C# by Tim Kennedy.
 
-FileHashes was written in C# by Tim Kennedy. Graphics files were created by Tim Kennedy.
+GetMyIP uses the following icons & packages:
 
-Xceed WPF Toolkit by Xceed was used for message boxes.
+	• Fugue Icons set https://p.yusukekamiyamane.com/
+
+	• Json.net v12.0.3 from Newtonsoft https://www.newtonsoft.com/json
+
+	• Inno Setup was used to create the installer. https://jrsoftware.org/isinfo.php
+
 
 
 MIT License
-Copyright (c) 2019 - 2020 Tim Kennedy
+Copyright (c) 2019 - 2021 Tim Kennedy
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction, including
