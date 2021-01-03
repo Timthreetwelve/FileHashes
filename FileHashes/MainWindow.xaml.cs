@@ -158,12 +158,7 @@ namespace FileHashes
             }
             catch (Exception ex)
             {
-                Mouse.OverrideCursor = null;
-                _ = TKMessageBox.Show($"The selected file could not be checked.\n{ex.Message}",
-                                      "FileHashes Error",
-                                      MessageBoxButton.OK,
-                                      MessageBoxImage.Error);
-                return string.Empty;
+                return ExceptionMessage(ex);
             }
         }
         private string SHA1Checksum(string file)
@@ -181,12 +176,7 @@ namespace FileHashes
             }
             catch (Exception ex)
             {
-                Mouse.OverrideCursor = null;
-                _ = TKMessageBox.Show($"The selected file could not be checked.\n{ex.Message}",
-                                      "FileHashes Error",
-                                      MessageBoxButton.OK,
-                                      MessageBoxImage.Error);
-                return string.Empty;
+                return ExceptionMessage(ex);
             }
         }
         private string SHA256Checksum(string file)
@@ -204,12 +194,7 @@ namespace FileHashes
             }
             catch (Exception ex)
             {
-                Mouse.OverrideCursor = null;
-                _ = TKMessageBox.Show($"The selected file could not be checked.\n{ex.Message}",
-                                      "FileHashes Error",
-                                      MessageBoxButton.OK,
-                                      MessageBoxImage.Error);
-                return string.Empty;
+                return ExceptionMessage(ex);
             }
         }
         private string SHA512Checksum(string file)
@@ -227,13 +212,18 @@ namespace FileHashes
             }
             catch (Exception ex)
             {
-                Mouse.OverrideCursor = null;
-                _ = TKMessageBox.Show($"The selected file could not be checked.\n{ex.Message}",
-                                      "FileHashes Error",
-                                      MessageBoxButton.OK,
-                                      MessageBoxImage.Error);
-                return string.Empty;
+                return ExceptionMessage(ex);
             }
+        }
+
+        private static string ExceptionMessage(Exception ex)
+        {
+            Mouse.OverrideCursor = null;
+            _ = TKMessageBox.Show($"The selected file could not be checked.\n\n{ex.Message}",
+                                  "FileHashes Error",
+                                  MessageBoxButton.OK,
+                                  MessageBoxImage.Error);
+            return string.Empty;
         }
         #endregion Compute Hashes
 
@@ -378,7 +368,8 @@ namespace FileHashes
 
         private void MnuReadMe_Click(object sender, RoutedEventArgs e)
         {
-            TextFileViewer.ViewTextFile(@".\ReadMe.txt");
+            string readme = Path.Combine(AppInfo.AppDirectory, "ReadMe.txt");
+            TextFileViewer.ViewTextFile(readme);
         }
         #endregion Menu & Button Events
 
@@ -402,20 +393,6 @@ namespace FileHashes
             tbxVerify.Text = string.Empty;
             lblVerify.Text = string.Empty;
         }
-
-        public string WindowTitleVersion()
-        {
-            // Get the assembly version
-            Version version = Assembly.GetExecutingAssembly().GetName().Version;
-
-            string myExe = Assembly.GetExecutingAssembly().GetName().Name;
-
-            // Remove the release (last) node
-            string titleVer = version.ToString().Remove(version.ToString().LastIndexOf("."));
-
-            return string.Format($"{myExe} - {titleVer}");
-        }
-
         #endregion Helper Methods
 
         #region Read the Settings file
@@ -433,7 +410,7 @@ namespace FileHashes
             Grid1.LayoutTransform = new ScaleTransform(curZoom, curZoom);
 
             // Put version number in title bar
-            Title = WindowTitleVersion();
+            Title = string.Format($"{AppInfo.AppName} - {AppInfo.TitleVersion}");
 
             // Settings change event
             UserSettings.Setting.PropertyChanged += UserSettingChanged;

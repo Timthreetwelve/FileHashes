@@ -1,8 +1,10 @@
-﻿using System;
+﻿#region Using directives
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Windows;
+#endregion Using directives
 
 namespace FileHashes
 {
@@ -21,7 +23,6 @@ namespace FileHashes
                         p.StartInfo.UseShellExecute = true;
                         p.StartInfo.ErrorDialog = false;
                         _ = p.Start();
-                        //WriteLog.WriteTempFile($"  Opening {txtfile} in default application");
                     }
                 }
                 catch (Win32Exception ex)
@@ -35,31 +36,33 @@ namespace FileHashes
                             p.StartInfo.UseShellExecute = true;
                             p.StartInfo.ErrorDialog = false;
                             _ = p.Start();
-                            //WriteLog.WriteTempFile($"  Opening {txtfile} in Notepad.exe");
                         }
                     }
                     else
                     {
-                        _ = MessageBox.Show($"Error reading file {txtfile}\n{ex.Message}", "Watcher Error",
-                            MessageBoxButton.OK, MessageBoxImage.Error);
-                        //WriteLog.WriteTempFile($"* Unable to open {txtfile}");
-                        //WriteLog.WriteTempFile($"* {ex.Message}");
+                        _ = MessageBox.Show($"Error reading file {txtfile}\n{ex.Message}",
+                                            "Watcher Error",
+                                            MessageBoxButton.OK,
+                                            MessageBoxImage.Error);
                     }
                 }
                 catch (Exception ex)
                 {
-                    _ = MessageBox.Show($"Unable to start default application used to open" +
-                        $" {txtfile}\n{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    //WriteLog.WriteTempFile($"* Unable to open {txtfile}");
-                    //WriteLog.WriteTempFile($"* {ex.Message}");
+                    _ = MessageBox.Show("Unable to start default application used to open"
+                                        + $" {txtfile}\n{ex.Message}",
+                                        "Error",
+                                        MessageBoxButton.OK,
+                                        MessageBoxImage.Error);
                 }
             }
             else
             {
-                Debug.WriteLine($">>> File not found: {txtfile}");
+                _ = MessageBox.Show($"File not found:\n{txtfile}",
+                    "Error",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
             }
         }
-        #endregion
+        #endregion Text file viewer
     }
-
 }
