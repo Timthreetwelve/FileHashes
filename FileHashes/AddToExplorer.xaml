@@ -28,7 +28,7 @@
         <TextBlock
             Grid.Row="1"
             Grid.Column="1"
-            Text="File Hashes can be added to the context menu in File Explorer and launched when right-clicking on a file."
+            Text="FileHashes can be added to the context menu in File Explorer and launched when right-clicking on a file."
             TextWrapping="Wrap" />
         <StackPanel
             Grid.Row="2"

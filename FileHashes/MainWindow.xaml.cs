@@ -112,7 +112,7 @@ namespace FileHashes
             }
             return false;
         }
-        #endregion
+        #endregion Get file info
 
         #region Compute Hashes
         private void CalculateHashes()
@@ -244,7 +244,7 @@ namespace FileHashes
             DisableMinMaxButtons();
         }
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void Window_Closing(object sender, CancelEventArgs e)
         {
             UserSettings.Setting.WindowLeft = Left;
             UserSettings.Setting.WindowTop = Top;
@@ -285,6 +285,7 @@ namespace FileHashes
         {
             GridSizeReset();
         }
+
         private void BtnVerify_Click(object sender, RoutedEventArgs e)
         {
             CompareHashes();
