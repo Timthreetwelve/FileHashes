@@ -13,5 +13,5 @@ FileHashes calculates file hashes (checksums) for a file. This file hash can be 
 
 
 
-<img src="\Images\FileHashes1.png" alt="FileHashes1" style="zoom:80%;" align="left"/>
+<img src="\Images\FileHashes1.png?raw=true" alt="FileHashes1" style="zoom:80%;" align="left"/>
 
