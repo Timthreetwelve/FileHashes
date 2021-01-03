@@ -10,8 +10,3 @@ FileHashes calculates file hashes (checksums) for a file. This file hash can be 
 * Easily verify file hashes
 
 👉  FileHashes requires .Net Framework 4.8 
-
-
-
-<img src="\Images\FileHashes1.png?raw=true" alt="FileHashes1" style="zoom:80%;" align="left"/>
-
