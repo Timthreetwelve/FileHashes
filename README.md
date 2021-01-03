@@ -1,4 +1,4 @@
-## FileHashes
+## ![](/Images/Hash.png)FileHashes
 FileHashes calculates file hashes (checksums) for a file. This file hash can be used to determine if a file has changed.
 
 #### Features
@@ -10,7 +10,8 @@ FileHashes calculates file hashes (checksums) for a file. This file hash can be 
 * Easily verify file hashes
 
 👉  FileHashes requires .Net Framework 4.8 
-  
-  <br/><br/>
-  
-![FileHashes screenshot](/Images/FileHashes1.png)
+
+
+
+![FileHashes screenshot](/Images/FileHashes1.png) 
+
