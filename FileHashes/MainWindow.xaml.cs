@@ -82,10 +82,10 @@ namespace FileHashes
                     case long n when (n > 500 && n <= 5000):
                         Debug.WriteLine($"*** {size} is above 100MB - less than 5000MB");
                         MessageBoxResult x = TKMessageBox.Show($"The file is {info.Length / MB:N0} megabytes," +
-                                                             "\nThis could take a while.\nDo you want to continue? ",
-                                                             "Large File Warning",
-                                                             MessageBoxButton.YesNo,
-                                                             MessageBoxImage.Question);
+                                                               "\nThis could take a while.\nDo you want to continue? ",
+                                                               "Large File Warning",
+                                                               MessageBoxButton.YesNo,
+                                                               MessageBoxImage.Question);
                         if (x == MessageBoxResult.No)
                         {
                             ClearTextBoxes();
@@ -95,9 +95,9 @@ namespace FileHashes
                     case long n when (n > 5000):
                         Debug.WriteLine($"||| {size}MB is above 5000 MB");
                         TKMessageBox.Show($"The file is {info.Length / MB:N0} megabytes\nFile is too large.",
-                                     "Large File Warning",
-                                     MessageBoxButton.OK,
-                                     MessageBoxImage.Warning);
+                                          "Large File Warning",
+                                          MessageBoxButton.OK,
+                                          MessageBoxImage.Warning);
                         ClearTextBoxes();
                         return false;
                     default:
@@ -145,46 +145,94 @@ namespace FileHashes
 
         private string MD5Checksum(string file)
         {
-            using (BufferedStream stream = new BufferedStream(File.OpenRead(file), bufferSize))
+            try
             {
-                using (MD5 md5 = new MD5CryptoServiceProvider())
+                using (BufferedStream stream = new BufferedStream(File.OpenRead(file), bufferSize))
                 {
-                    byte[] checksum = md5.ComputeHash(stream);
-                    return BitConverter.ToString(checksum).Replace("-", string.Empty).ToLower();
+                    using (MD5 md5 = new MD5CryptoServiceProvider())
+                    {
+                        byte[] checksum = md5.ComputeHash(stream);
+                        return BitConverter.ToString(checksum).Replace("-", string.Empty).ToLower();
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Mouse.OverrideCursor = null;
+                _ = TKMessageBox.Show($"The selected file could not be checked.\n{ex.Message}",
+                                      "FileHashes Error",
+                                      MessageBoxButton.OK,
+                                      MessageBoxImage.Error);
+                return string.Empty;
             }
         }
         private string SHA1Checksum(string file)
         {
-            using (BufferedStream stream = new BufferedStream(File.OpenRead(file), bufferSize))
+            try
             {
-                using (SHA1 sha1 = new SHA1CryptoServiceProvider())
+                using (BufferedStream stream = new BufferedStream(File.OpenRead(file), bufferSize))
                 {
-                    byte[] checksum = sha1.ComputeHash(stream);
-                    return BitConverter.ToString(checksum).Replace("-", string.Empty).ToLower();
+                    using (SHA1 sha1 = new SHA1CryptoServiceProvider())
+                    {
+                        byte[] checksum = sha1.ComputeHash(stream);
+                        return BitConverter.ToString(checksum).Replace("-", string.Empty).ToLower();
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Mouse.OverrideCursor = null;
+                _ = TKMessageBox.Show($"The selected file could not be checked.\n{ex.Message}",
+                                      "FileHashes Error",
+                                      MessageBoxButton.OK,
+                                      MessageBoxImage.Error);
+                return string.Empty;
             }
         }
         private string SHA256Checksum(string file)
         {
-            using (FileStream stream = File.OpenRead(file))
+            try
             {
-                using (SHA256 sha256 = new SHA256CryptoServiceProvider())
+                using (FileStream stream = File.OpenRead(file))
                 {
-                    byte[] checksum = sha256.ComputeHash(stream);
-                    return BitConverter.ToString(checksum).Replace("-", string.Empty).ToLower();
+                    using (SHA256 sha256 = new SHA256CryptoServiceProvider())
+                    {
+                        byte[] checksum = sha256.ComputeHash(stream);
+                        return BitConverter.ToString(checksum).Replace("-", string.Empty).ToLower();
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Mouse.OverrideCursor = null;
+                _ = TKMessageBox.Show($"The selected file could not be checked.\n{ex.Message}",
+                                      "FileHashes Error",
+                                      MessageBoxButton.OK,
+                                      MessageBoxImage.Error);
+                return string.Empty;
             }
         }
         private string SHA512Checksum(string file)
         {
-            using (FileStream stream = File.OpenRead(file))
+            try
             {
-                using (SHA512 sha512 = new SHA512CryptoServiceProvider())
+                using (FileStream stream = File.OpenRead(file))
                 {
-                    byte[] checksum = sha512.ComputeHash(stream);
-                    return BitConverter.ToString(checksum).Replace("-", string.Empty).ToLower();
+                    using (SHA512 sha512 = new SHA512CryptoServiceProvider())
+                    {
+                        byte[] checksum = sha512.ComputeHash(stream);
+                        return BitConverter.ToString(checksum).Replace("-", string.Empty).ToLower();
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Mouse.OverrideCursor = null;
+                _ = TKMessageBox.Show($"The selected file could not be checked.\n{ex.Message}",
+                                      "FileHashes Error",
+                                      MessageBoxButton.OK,
+                                      MessageBoxImage.Error);
+                return string.Empty;
             }
         }
         #endregion Compute Hashes
