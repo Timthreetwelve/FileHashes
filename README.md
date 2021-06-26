@@ -1,4 +1,8 @@
 ## FileHashes
+[![GitHub](https://img.shields.io/github/license/Timthreetwelve/FileHashes?style=plastic)](https://github.com/Timthreetwelve/FileHashes/blob/main/LICENSE)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/Timthreetwelve/FileHashes?style=plastic)](https://github.com/Timthreetwelve/FileHashes/releases/latest) 
+[![GitHub all releases](https://img.shields.io/github/downloads/Timthreetwelve/FileHashes/total?style=plastic)](https://github.com/Timthreetwelve/FileHashes/releases) 
+
 FileHashes calculates file hashes (checksums) for a file. This file hash can be used to determine if a file has changed.
 
 #### Features
