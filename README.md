@@ -1,11 +1,11 @@
-## FileHashes
+# FileHashes
 [![GitHub](https://img.shields.io/github/license/Timthreetwelve/FileHashes?style=plastic)](https://github.com/Timthreetwelve/FileHashes/blob/main/LICENSE)
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/Timthreetwelve/FileHashes?style=plastic)](https://github.com/Timthreetwelve/FileHashes/releases/latest) 
 [![GitHub all releases](https://img.shields.io/github/downloads/Timthreetwelve/FileHashes/total?style=plastic)](https://github.com/Timthreetwelve/FileHashes/releases) 
 
 FileHashes calculates file hashes (checksums) for a file. This file hash can be used to determine if a file has changed.
 
-#### Features
+### Features
 
 * Calculate MD5, SHA1, SHA256 and SHA512 hashes
 
@@ -15,6 +15,8 @@ FileHashes calculates file hashes (checksums) for a file. This file hash can be 
 
 👉  FileHashes requires .Net Framework 4.8 
   
-  <br/><br/>
-  
+### Screenshot  
 ![FileHashes screenshot](/Images/FileHashes1.png)
+
+### Download
+Download form [here](https://github.com/Timthreetwelve/FileHashes/releases) 
